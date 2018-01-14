@@ -42,7 +42,7 @@ class Store {
 				self.championList[champion].name === heroName ? hero = self.championList[champion] : null;
 			}
 		}
-		fetch(`http://ddragon.leagueoflegends.com/cdn/${self.version}/data/en_US/champion/${hero.key}.json`, {
+		fetch(`https://ddragon.leagueoflegends.com/cdn/${self.version}/data/en_US/champion/${hero.key}.json`, {
 			'Content-Type': 'application/json'
 		})
 			.then(r => r.json())

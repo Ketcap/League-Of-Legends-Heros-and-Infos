@@ -11,7 +11,7 @@ export default class Home extends Component {
 	};
 
 	heroImage(heroName) {
-		return `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${heroName}_0.jpg`;
+		return `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${heroName}_0.jpg`;
 	}
 	loadMore(event) {
 		event.preventDefault();

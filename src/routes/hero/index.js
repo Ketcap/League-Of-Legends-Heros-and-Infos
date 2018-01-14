@@ -48,7 +48,7 @@ export default class Hero extends Component {
 					<div class="uk-width-1-1">
 						<div>
 							<div class="uk-background-cover uk-background-fixed uk-height-large uk-panel uk-flex uk-flex-center uk-flex-middle uk-light"
-								style={`background-image: url(http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_0.jpg);`}>
+								style={`background-image: url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_0.jpg);`}>
 								<p class="uk-h4">
 									{hero.name}
 									<br />
@@ -147,9 +147,9 @@ export default class Hero extends Component {
 						<div class="uk-card uk-card-default uk-card-body">
 							<h3 class="uk-card-title">Skills</h3>
 							<ul class="uk-tab"  uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
-								<li><a href="#"><img src={`http://ddragon.leagueoflegends.com/cdn/${version}/img/passive/${hero.passive.image.full}`} /></a></li>
+								<li><a href="#"><img src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/passive/${hero.passive.image.full}`} /></a></li>
 								{hero.spells.map(spell =>
-									<li><a href="#"><img src={`http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${spell.image.full}`} /></a></li>
+									<li><a href="#"><img src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${spell.image.full}`} /></a></li>
 								)}
 							</ul>
 							<ul class="uk-switcher uk-margin">
@@ -179,10 +179,10 @@ export default class Hero extends Component {
 							<div class="uk-child-width-1-3@m" uk-grid uk-lightbox="animation: fade">
 								{hero.skins.map(skin => (
 									<div>
-										<a class="uk-inline" href={`http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_${skin.num}.jpg`}
+										<a class="uk-inline" href={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_${skin.num}.jpg`}
 											caption={skin.name === 'default' ? 'Classic' : skin.name}
 										>
-											<img src={`http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_${skin.num}.jpg`} alt="" />
+											<img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_${skin.num}.jpg`} alt="" />
 										</a>
 									</div>
 								))}
