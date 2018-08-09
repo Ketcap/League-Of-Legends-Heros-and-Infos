@@ -1,62 +1,34 @@
 import { h, Component } from 'preact';
+import withContext from '../../store/withContext';
+import { Dragon } from '../../store';
 
-import { connect } from 'mobx-preact';
-
-@connect(['store'])
-export default class Hero extends Component {
-	state = {
-		hero: null
-	};
-
-	replaceTooltip(spell) {
-		let tooltip = spell.tooltip;
-		['(', ')', '}}', '_'].map(val => tooltip = tooltip.split(val).join(''));
-		spell.effect.map((e, i) => {
-			if (e !== null) tooltip = tooltip.replace(new RegExp(`{{ e${i}`), `<span class="uk-text-danger">${e.toString()}</span>`);
-		});
-		spell.effectBurn.map((e, i) => {
-			if (e !== null) tooltip = tooltip.replace(new RegExp(`{{ f${i}`), `<span class="uk-text-primary">${e.toString()}</span>`);
-		});
-		spell.vars.map((e, i) => {
-			const damageType = e.link.indexOf('attack') > -1 ? 'AD' : 'AP';
-			if (e !== null) tooltip = tooltip.replace(new RegExp(`{{ ${e.key}`), `<span class="uk-text-success"> ${Math.floor(e.coeff * 10)}% ${damageType}`);
-		});
-		return tooltip;
-	}
-
+class Hero extends Component {
 	componentDidMount() {
-		const self = this;
-		let Store = self.props.store.Store;
-
-		const heroname = self.props.heroname;
-		Store.findHero(heroname, (hero) => {
-			this.setState({ hero });
-			console.log(hero);
-		});
-
+		const { setHero } = this.props.context;
+		const { heroname } = this.props.matches;
+		setHero(heroname);
 	}
-
-	render({ store }, { hero }) {
-		const self = this;
-		if (hero === null) {
-			return (<div> Loading ...</div>);
+	render() {
+		const { hero, DataDragon } = this.props.context;
+		if (!hero) {
+			return (
+				<div>Loading....</div>
+			);
 		}
-		const version = store.Store.version;
 		return (
-			<div>
-				<div uk-grid>
-					<div class="uk-width-1-1">
-						<div>
-							<div class="uk-background-cover uk-background-fixed uk-height-large uk-panel uk-flex uk-flex-center uk-flex-middle uk-light"
-								style={`background-image: url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_0.jpg);`}>
-								<p class="uk-h4">
-									{hero.name}
-									<br />
-									<span class="uk-text-meta">{hero.title}</span>
-									<br />
-									{hero.tags.map(tag => (<span class="uk-label uk-margin-right">{tag}</span>))}
-								</p>
-							</div>
+			<div uk-grid>
+				<div class="uk-width-1-1">
+					<div>
+						<div class="uk-background-cover uk-background-fixed uk-height-large uk-panel uk-flex uk-flex-center uk-flex-middle uk-light"
+							style={`background-image: url(http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${hero.id}_0.jpg)`}
+						>
+							<p class="uk-h4">
+								{hero.name}
+								<br />
+								<span class="uk-text-meta">{hero.title}</span>
+								<br />
+								{hero.tags.map(tag => (<span class="uk-label uk-margin-right">{tag}</span>))}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -125,31 +97,30 @@ export default class Hero extends Component {
 							<p>{hero.lore}</p>
 							<div>
 								Attack
-								<progress id="js-progressbar" class="uk-progress" value={hero.info.attack * 10} max="100" />
+				<progress id="js-progressbar" class="uk-progress" value={hero.info.attack * 10} max="100" />
 							</div>
 							<div>
 								Defense
-								<progress id="js-progressbar" class="uk-progress" value={hero.info.defense * 10} max="100" />
+				<progress id="js-progressbar" class="uk-progress" value={hero.info.defense * 10} max="100" />
 							</div>
 							<div>
 								Difficulty
-								<progress id="js-progressbar" class="uk-progress" value={hero.info.difficulty * 10} max="100" />
+				<progress id="js-progressbar" class="uk-progress" value={hero.info.difficulty * 10} max="100" />
 							</div>
 							<div>
 								Magic
-								<progress id="js-progressbar" class="uk-progress" value={hero.info.magic * 10} max="100" />
+				<progress id="js-progressbar" class="uk-progress" value={hero.info.magic * 10} max="100" />
 							</div>
 						</div>
-
 					</div>
 					{/* Skills */}
 					<div class="uk-width-1-1@s">
 						<div class="uk-card uk-card-default uk-card-body">
 							<h3 class="uk-card-title">Skills</h3>
-							<ul class="uk-tab"  uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
-								<li><a href="#"><img src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/passive/${hero.passive.image.full}`} /></a></li>
-								{hero.spells.map(spell =>
-									<li><a href="#"><img src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${spell.image.full}`} /></a></li>
+							<ul class="uk-tab" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+								<li><a href="#"><img src={`https://ddragon.leagueoflegends.com/cdn/${DataDragon.versions[0]}/img/passive/${hero.passive.image.full}`} /></a></li>
+								{hero.get_spells().map(spell =>
+									<li><a href="#"><img src={spell.image} /></a></li>
 								)}
 							</ul>
 							<ul class="uk-switcher uk-margin">
@@ -159,13 +130,13 @@ export default class Hero extends Component {
 										<p class="uk-text-meta" dangerouslySetInnerHTML={{ __html: hero.passive.description }} />
 									</div>
 								</li>
-								{hero.spells.map(spell =>
+								{hero.get_spells().map(spell =>
 									(
 										<div class="uk-padding">
 											<li>
 												<p class="uk-text-bold">{spell.name}</p>
-												<p class="uk-text-meta">{spell.description}</p>
-												<p dangerouslySetInnerHTML={{ __html: self.replaceTooltip(spell) }} />
+												<p class="uk-text-meta" dangerouslySetInnerHTML={{ __html: spell.description }} />
+												<p>{spell.tooltip}</p>
 											</li>
 										</div>
 
@@ -189,10 +160,9 @@ export default class Hero extends Component {
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
-
 		);
 	}
 }
+export default withContext(Hero);
