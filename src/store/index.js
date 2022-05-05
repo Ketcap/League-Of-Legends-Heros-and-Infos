@@ -4,6 +4,8 @@ import DataDragon from 'datadragonapi';
 
 const Dragon = createContext();
 
+const defaultVersion = "12.8.1";
+
 class Context extends Component {
 	state = {
 		champs: [],
@@ -20,10 +22,10 @@ class Context extends Component {
 	}
 	setHero = async (name) => {
 		this.setState({ hero: null });
-		const hero = await DataDragon.getChampions({ version: '8.15.1', champion: name });
+		const hero = await DataDragon.getChampions({ version: defaultVersion, champion: name });
 		this.setState({ hero });
 	}
-	getChamps = async (version = '8.15.1', champion) => (
+	getChamps = async (version = defaultVersion, champion) => (
 		await DataDragon.getChampions({ version, champion })
 	)
 	constructor(props) {
